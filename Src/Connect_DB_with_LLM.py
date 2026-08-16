@@ -5,7 +5,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.messages import SystemMessage,HumanMessage
 from dotenv import load_dotenv
 import os
-from config import VECTOR_STORE_PATH, EMBEDDING_MODEL, LLM_MODEL
+from Src.config import VECTOR_STORE_PATH, EMBEDDING_MODEL, LLM_MODEL
 load_dotenv()
 
 def load_vector_store(path: str = VECTOR_STORE_PATH):

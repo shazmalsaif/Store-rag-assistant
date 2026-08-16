@@ -65,3 +65,4 @@ if __name__ == "__main__":
 
         result = app.invoke({"messages":[HumanMessage(content=query)]},config=config)
         print(f"\nBot: {result['messages'][-1].content}\n")
+    

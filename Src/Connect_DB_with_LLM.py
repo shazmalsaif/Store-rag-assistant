@@ -1,6 +1,8 @@
 from langgraph.graph import StateGraph,MessagesState,START
 from langgraph.checkpoint.memory import MemorySaver
-from langchain_huggingface import HuggingFaceEmbeddings, HuggingFaceEndpoint, ChatHuggingFace
+from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
+from langchain_core.embeddings import Embeddings
+from huggingface_hub import InferenceClient
 from langchain_community.vectorstores import FAISS
 from langchain_core.messages import SystemMessage,HumanMessage
 from dotenv import load_dotenv
@@ -8,8 +10,34 @@ import os
 from Src.config import VECTOR_STORE_PATH, EMBEDDING_MODEL, LLM_MODEL
 load_dotenv()
 
+class HFRemoteEmbeddings(Embeddings):
+    def __init__(self, model_name):
+        self.client = InferenceClient(
+        provider="hf-inference",
+        api_key=os.getenv("HF_TOKEN")
+        )
+        self.model_name = model_name
+
+    def embed_query(self, text: str) -> list[float]:
+        embedding = self.client.feature_extraction(
+            text,
+            model=self.model_name,
+            normalize=True
+        )
+
+        return embedding.flatten().tolist()
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        embeddings = self.client.feature_extraction(
+            texts,
+            model=self.model_name,
+            normalize=True
+        )
+
+        return embeddings.tolist()
+    
 def load_vector_store(path: str = VECTOR_STORE_PATH):
-    embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+    embeddings = HFRemoteEmbeddings(model_name=EMBEDDING_MODEL)
     vector_store = FAISS.load_local(
         path,
         embeddings,

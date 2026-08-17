@@ -6,6 +6,5 @@ langchain-core
 langchain-community
 langchain-huggingface
 huggingface-hub
-sentence-transformers
 faiss-cpu
 python-dotenv

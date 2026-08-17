@@ -1,5 +1,0 @@
-[33m7f397eb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m feat: add FastAPI endpoint for RAG chatbot
-[33m91082cf[m Add conversation memory via LangGraph checkpointer, replacing stateless retrieval chain
-[33m05ea912[m Add RAG pipeline: doc ingestion, chunking, FAISS embedding, and retrieval-based chat- Load and parse markdown docs from data/raw_docs - Chunk via RecursiveCharacterTextSplitter - Generate embeddings (all-MiniLM-L6-v2) and store in local FAISS index - Query-time retrieval + context-grounded LLM response via HF endpoint
-[33m5aa8436[m Initial commit
-[33m130f839[m Initial commit

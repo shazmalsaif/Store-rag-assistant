@@ -35,12 +35,12 @@ class ChatRequest(BaseModel):
     thread_id: str = "default"
 
 
-@app.get("/")
+@app.get("/api")
 def root():
     return {"message": "Store RAG API is running"}
 
 
-@app.post("/chat")
+@app.post("/api/chat")
 def chat(request: ChatRequest):
 
     result = chat_graph.invoke(

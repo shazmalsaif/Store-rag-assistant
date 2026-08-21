@@ -33,7 +33,7 @@ chat_graph = build_chat_graph(vector_store, llm)
 
 class ChatRequest(BaseModel):
     message: str
-    thread_id: str = "default"
+    thread_id: str 
 
 
 @app.get("/api")

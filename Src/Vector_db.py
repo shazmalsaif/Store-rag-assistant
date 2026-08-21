@@ -2,28 +2,29 @@ import faiss
 from langchain_huggingface import HuggingFaceEmbeddings,HuggingFaceEndpoint,ChatHuggingFace
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import PyPDFLoader
 from dotenv import load_dotenv
 from pathlib import Path
 
 load_dotenv()
 # 1.Flatch raw data
-from pathlib import Path
 
-def load_md_files(folder_path: str) -> list[dict]:
+
+def load_pdf_files(folder_path: str) -> list[dict]:
     """Reads all .md files in a folder, returns list of {source, content}."""
     docs = []
     folder = Path(folder_path)
 
-    for file_path in folder.glob("*.md"):
-        with open(file_path, "r", encoding="utf-8") as f:
-            content = f.read()
+    for file_path in folder.glob("*.pdf"):
+        loader = PyPDFLoader(str(file_path))
+        pages = loader.load()
+        content = "\n".join(page.page_content for page in pages)
         docs.append({
             "source": file_path.name,
             "content": content
         })
 
     return docs
-
 
 # 2.Divide into chunk
 
@@ -61,7 +62,7 @@ def build_vector_store(chunks: list[dict], save_path: str = "Data/vector_data"):
 
 
 if __name__ == "__main__":
-    documents = load_md_files("Data/raw_data")
+    documents = load_pdf_files("Data/raw_data")
     print(f"Loaded {len(documents)} documents")
 
     chunks = chunk_documents(documents)
